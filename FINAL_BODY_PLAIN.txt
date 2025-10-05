@@ -1,0 +1,70 @@
+Dear {{name}},
+
+Congratulations! 🎊
+
+We are thrilled to inform you that you have been successfully SHORTLISTED for the AI Spark Bootcamp!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📋 YOUR APPLICATION DETAILS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Name: {{name}}
+Branch: {{branch}}
+University Roll No: {{University Roll Number (only for MMMUT Students)}}
+WhatsApp Contact: {{phoneNumber}}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+🚀 WHAT'S NEXT?
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+We will share the complete bootcamp schedule, session timings, and joining instructions on WhatsApp within the next 48 hours at {{phoneNumber}}.
+
+Please ensure:
+✅ Your WhatsApp is active on this number
+✅ You've saved our contact number (will be shared separately)  
+✅ You join our exclusive WhatsApp group (link coming soon)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📅 IMPORTANT DATES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+• Bootcamp Start Date: December 15, 2025
+• Duration: 4 Weeks (Intensive)
+• Mode: Online + Hybrid Sessions
+• Timings: Weekends (Sat-Sun)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+💡 WHAT YOU'LL GET
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+→ Hands-on AI & Machine Learning Projects
+→ Live Sessions with Industry Experts
+→ Certificate of Completion
+→ LinkedIn Profile Enhancement
+→ Career Guidance & Mentorship
+→ Lifetime Community Access
+→ Real-world Case Studies
+→ Placement Preparation Support
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ ACTION REQUIRED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Please confirm your participation by replying "CONFIRMED" to this email within 24 hours.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+If you have any questions, feel free to reach out to us.
+
+Looking forward to seeing you at the AI Spark Bootcamp!
+
+Best regards,
+Team AI Spark
+ 
+P.S. - Make sure to check your WhatsApp ({{phoneNumber}}) regularly for updates!
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+📧 Email: aispark@example.com
+📱 Support: +91-XXXXXXXXXX
+🌐 Website: www.aispark.live
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
