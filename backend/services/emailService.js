@@ -88,10 +88,10 @@ class EmailService {
 
   // Convert plain text to simple HTML (preserves original formatting)
   convertPlainTextToHTML(text) {
-    // Just convert newlines to <br> and wrap in a simple pre-formatted container
-    // This preserves the exact formatting from the plain text
+    // Convert plain text to clean HTML with professional formatting
+    // Preserves line breaks and spacing while using a clean sans-serif font
     const html = `
-      <div style="font-family: 'Courier New', monospace; white-space: pre-wrap; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #ffffff; color: #000000; font-size: 14px; line-height: 1.6;">
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; white-space: pre-wrap; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #ffffff; color: #202124; font-size: 14px; line-height: 1.6;">
 ${text}
       </div>
     `;
