@@ -104,6 +104,43 @@ const EmailUploader = ({ onCampaignComplete }) => {
     }
   };
 
+  // Helper to render template with data (same logic as backend)
+  const renderTemplate = (template, data) => {
+    let rendered = template;
+    
+    // Create a case-insensitive lookup map
+    const dataMap = {};
+    Object.keys(data).forEach(key => {
+      dataMap[key] = data[key];
+      dataMap[key.toLowerCase()] = data[key];
+    });
+    
+    // Replace all {{placeholder}} with actual values (case-insensitive)
+    rendered = rendered.replace(/\{\{\s*([^}]+)\s*\}\}/gi, (match, placeholder) => {
+      const trimmedPlaceholder = placeholder.trim();
+      
+      if (dataMap[trimmedPlaceholder] !== undefined) {
+        return dataMap[trimmedPlaceholder] || '';
+      }
+      
+      if (dataMap[trimmedPlaceholder.toLowerCase()] !== undefined) {
+        return dataMap[trimmedPlaceholder.toLowerCase()] || '';
+      }
+      
+      const cleanPlaceholder = trimmedPlaceholder.toLowerCase().replace(/[^a-z0-9]/g, '');
+      for (const [key, value] of Object.entries(dataMap)) {
+        const cleanKey = key.toLowerCase().replace(/[^a-z0-9]/g, '');
+        if (cleanKey === cleanPlaceholder) {
+          return value || '';
+        }
+      }
+      
+      return '';
+    });
+    
+    return rendered;
+  };
+
   const handleSendEmails = async (e) => {
     e.preventDefault();
     
@@ -246,16 +283,17 @@ const EmailUploader = ({ onCampaignComplete }) => {
               <div className="mb-2">
                 <span className="text-xs text-gray-600">Subject:</span>
                 <div className="font-medium text-gray-800">
-                  {subject.replace(/{{(\w+)}}/g, (match, key) => sampleData[key] || match)}
+                  {renderTemplate(subject, sampleData)}
                 </div>
               </div>
             )}
             {body && (
               <div>
                 <span className="text-xs text-gray-600">Body:</span>
-                <div className="text-sm text-gray-700 whitespace-pre-wrap">
-                  {body.replace(/{{(\w+)}}/g, (match, key) => sampleData[key] || match)}
-                </div>
+                <div 
+                  className="text-sm text-gray-700 whitespace-pre-wrap"
+                  dangerouslySetInnerHTML={{ __html: renderTemplate(body, sampleData) }}
+                />
               </div>
             )}
           </div>

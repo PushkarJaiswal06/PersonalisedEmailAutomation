@@ -88,11 +88,28 @@ class EmailService {
 
   // Convert plain text to simple HTML (preserves original formatting)
   convertPlainTextToHTML(text) {
+    // Decode HTML entities first (in case they were double-encoded)
+    const decodedText = text
+      .replace(/&lt;/g, '<')
+      .replace(/&gt;/g, '>')
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&amp;/g, '&');
+
+    // Apply Markdown-style formatting for plain text
+    // **bold** or __bold__ -> <strong>
+    // *italic* or _italic_ -> <em>
+    let formatted = decodedText
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/__(.+?)__/g, '<strong>$1</strong>')
+      .replace(/\*([^\s*](?:.*?[^\s*])?)\*/g, '<em>$1</em>')
+      .replace(/_([^\s_](?:.*?[^\s_])?)_/g, '<em>$1</em>');
+
     // Convert plain text to clean HTML with professional formatting
-    // Preserves line breaks and spacing while using a clean sans-serif font
+    // Preserves line breaks, spacing, and HTML tags from Excel
     const html = `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; white-space: pre-wrap; max-width: 800px; margin: 0 auto; padding: 20px; background-color: #ffffff; color: #202124; font-size: 14px; line-height: 1.6;">
-${text}
+${formatted}
       </div>
     `;
     

@@ -1,22 +1,123 @@
-import xlsx from 'xlsx';
+import ExcelJS from 'exceljs';
 import csv from 'csv-parser';
 import fs from 'fs';
 import { pipeline } from 'stream/promises';
 
 class FileParser {
-  // Parse Excel file (.xlsx, .xls)
+  // Parse Excel file (.xlsx, .xls) with proper formatting support
   async parseExcel(filePath) {
     try {
-      const workbook = xlsx.readFile(filePath);
-      const sheetName = workbook.SheetNames[0];
-      const worksheet = workbook.Sheets[sheetName];
-      const data = xlsx.utils.sheet_to_json(worksheet);
+      const workbook = new ExcelJS.Workbook();
+      await workbook.xlsx.readFile(filePath);
       
+      const worksheet = workbook.worksheets[0];
+      if (!worksheet) {
+        throw new Error('The Excel sheet is empty or invalid');
+      }
+
+      const data = [];
+      let headers = [];
+
+      worksheet.eachRow((row, rowNumber) => {
+        if (rowNumber === 1) {
+          // Extract headers from first row
+          headers = row.values.slice(1).map(cell => {
+            if (typeof cell === 'object' && cell.richText) {
+              return cell.richText.map(t => t.text).join('');
+            }
+            return cell ? cell.toString().trim() : '';
+          });
+        } else {
+          // Extract data rows with formatting preserved
+          const rowData = {};
+          let hasData = false;
+
+          row.eachCell({ includeEmpty: true }, (cell, colNumber) => {
+            if (colNumber > headers.length) return;
+            
+            const header = headers[colNumber - 1];
+            if (!header) return;
+
+            const value = this.getCellValueWithFormatting(cell);
+            
+            if (value) {
+              hasData = true;
+            }
+            
+            rowData[header] = value;
+          });
+
+          if (hasData) {
+            data.push(rowData);
+          }
+        }
+      });
+
       const recipients = this.extractRecipients(data);
       return recipients;
     } catch (error) {
       throw new Error(`Excel parsing error: ${error.message}`);
     }
+  }
+
+  // Extract cell value and preserve bold/italic/underline formatting as HTML
+  getCellValueWithFormatting(cell) {
+    if (!cell || !cell.value) return '';
+
+    // Handle rich text (when parts of text have different formatting)
+    if (cell.value.richText && Array.isArray(cell.value.richText)) {
+      return cell.value.richText.map(segment => {
+        const text = segment.text || '';
+        const font = segment.font || {};
+        
+        let html = this.escapeHtml(text);
+        
+        // Apply formatting in correct order
+        if (font.italic) {
+          html = `<em>${html}</em>`;
+        }
+        if (font.underline) {
+          html = `<u>${html}</u>`;
+        }
+        if (font.bold) {
+          html = `<strong>${html}</strong>`;
+        }
+        
+        return html;
+      }).join('');
+    }
+
+    // Handle regular cells with uniform formatting
+    const text = cell.text || cell.value.toString();
+    if (!text) return '';
+
+    // Check if entire cell has formatting
+    const font = cell.font || {};
+    let html = this.escapeHtml(text);
+    
+    // Apply formatting in correct order
+    if (font.italic) {
+      html = `<em>${html}</em>`;
+    }
+    if (font.underline) {
+      html = `<u>${html}</u>`;
+    }
+    if (font.bold) {
+      html = `<strong>${html}</strong>`;
+    }
+    
+    return html;
+  }
+
+  // Escape HTML special characters
+  escapeHtml(text) {
+    if (!text) return '';
+    return text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   // Parse CSV file
@@ -113,7 +214,9 @@ class FileParser {
         
         // Check if this is an email
         if (value && typeof value === 'string') {
-          const emailValue = value.toString().trim().toLowerCase();
+          // Strip HTML tags to check for email pattern
+          const plainValue = value.replace(/<[^>]*>/g, '');
+          const emailValue = plainValue.toString().trim().toLowerCase();
           if (emailRegex.test(emailValue) && !email) {
             email = emailValue;
           }
