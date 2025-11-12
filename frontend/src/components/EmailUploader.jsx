@@ -283,7 +283,7 @@ const EmailUploader = ({ onCampaignComplete }) => {
               <div className="mb-2">
                 <span className="text-xs text-gray-600">Subject:</span>
                 <div className="font-medium text-gray-800">
-                  {renderTemplate(subject, sampleData)}
+                  {renderTemplate(subject, sampleData).replace(/<[^>]*>/g, '')}
                 </div>
               </div>
             )}
@@ -291,8 +291,9 @@ const EmailUploader = ({ onCampaignComplete }) => {
               <div>
                 <span className="text-xs text-gray-600">Body:</span>
                 <div 
-                  className="text-sm text-gray-700 whitespace-pre-wrap"
-                  dangerouslySetInnerHTML={{ __html: renderTemplate(body, sampleData) }}
+                  className="text-sm text-gray-700"
+                  style={{ lineHeight: '1.6' }}
+                  dangerouslySetInnerHTML={{ __html: renderTemplate(body, sampleData).replace(/\n/g, '<br>') }}
                 />
               </div>
             )}
