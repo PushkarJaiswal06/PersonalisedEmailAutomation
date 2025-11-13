@@ -88,7 +88,14 @@ class FileParser {
     }
 
     // Handle regular cells with uniform formatting
-    const text = cell.text || cell.value.toString();
+    // Convert value to string safely
+    let text = '';
+    if (cell.text) {
+      text = String(cell.text);
+    } else if (cell.value !== null && cell.value !== undefined) {
+      text = String(cell.value);
+    }
+    
     if (!text) return '';
 
     // Check if entire cell has formatting
@@ -109,15 +116,16 @@ class FileParser {
     return html;
   }
 
-  // Escape HTML special characters
+  // Escape HTML special characters (but preserve text content)
   escapeHtml(text) {
     if (!text) return '';
-    return text
-      .replace(/&/g, '&amp;')
+    // Convert to string if not already
+    const str = String(text);
+    // Only escape < and > to prevent HTML injection
+    // Don't escape & as it's commonly used in text (like "Expert talks & industry workshops")
+    return str
       .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+      .replace(/>/g, '&gt;');
   }
 
   // Parse CSV file
